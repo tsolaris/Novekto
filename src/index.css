@@ -1,0 +1,237 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================================================
+   NOVEKTO - Midnight & Cyan design system (global layer)
+   Color/font TOKENS live in tailwind.config.js.
+   This file holds base element styling, texture, and a few
+   reusable utility classes referenced across sections.
+   ========================================================= */
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    --accent: 34 211 238;      /* #22D3EE */
+    --accent-light: 56 189 248;/* #38BDF8 */
+    --gold: 103 232 249;        /* #67E8F9 */
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    /* Global horizontal-overflow safety net. `clip` (not `hidden`) does NOT
+       create a scroll container, so position: sticky / fixed keep working. */
+    overflow-x: clip;
+  }
+
+  body {
+    @apply bg-espresso text-ash font-sans antialiased;
+    /* honest base is dark espresso; sections layer warmth on top */
+    overflow-x: clip;
+    max-width: 100%;
+  }
+
+  ::selection {
+    background: rgba(34, 211, 238, 0.28);
+    color: #fff;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display text-cream tracking-tightest;
+    text-wrap: balance;
+  }
+
+  /* Visible, on-brand focus ring for keyboard users everywhere */
+  :focus-visible {
+    outline: 2px solid rgb(var(--accent));
+    outline-offset: 3px;
+  }
+
+  /* Respect users who prefer reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* Page shell width */
+  .container-x {
+    @apply mx-auto w-full max-w-content px-6 sm:px-8;
+  }
+
+  /* Skip-to-content link: off-screen until keyboard focus reveals it */
+  .skip-link {
+    @apply sr-only;
+  }
+  .skip-link:focus {
+    @apply not-sr-only fixed left-4 top-4 z-[100] rounded-lg border border-accent/60 bg-espresso
+           px-4 py-2 text-sm font-semibold text-cream;
+  }
+
+  /* Eyebrow label used above section headings */
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.22em] text-accent-light;
+  }
+  .eyebrow::before {
+    content: '';
+    @apply block h-px w-6 bg-accent/70;
+  }
+
+  /* Accent link underline that wipes in on hover (desktop pointer) */
+  .link-underline {
+    @apply relative text-cream/80 transition-colors duration-200 hover:text-cream;
+  }
+  .link-underline::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    height: 1.5px;
+    width: 100%;
+    transform: scaleX(0);
+    transform-origin: left;
+    background: linear-gradient(90deg, rgb(var(--accent)), rgb(var(--gold)));
+    transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .link-underline:hover::after,
+  .link-underline:focus-visible::after {
+    transform: scaleX(1);
+  }
+
+  /* Primary "molten" button */
+  .btn-accent {
+    @apply relative inline-flex items-center justify-center gap-2 rounded-full px-6 py-3
+           text-sm font-semibold text-espresso transition-all duration-300;
+    background: linear-gradient(180deg, #67E8F9 0%, #38BDF8 46%, #22D3EE 100%);
+    box-shadow: 0 6px 22px -8px rgba(34, 211, 238, 0.7), inset 0 1px 0 rgba(255,255,255,0.35);
+  }
+  .btn-accent:hover {
+    box-shadow: 0 10px 34px -8px rgba(34, 211, 238, 0.9), inset 0 1px 0 rgba(255,255,255,0.45);
+    transform: translateY(-1px);
+  }
+  .btn-accent:active { transform: translateY(0); }
+
+  /* Secondary / ghost button on hairline */
+  .btn-ghost {
+    @apply relative inline-flex items-center justify-center gap-2 rounded-full border border-hairline
+           bg-surface/40 px-6 py-3 text-sm font-semibold text-cream transition-all duration-300
+           hover:border-accent/60 hover:bg-surface;
+  }
+
+  /* Top-edge light catch for raised surfaces (calm, material depth) */
+  .card-sheen {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06),
+                0 24px 48px -34px rgba(0, 0, 0, 0.85);
+  }
+
+  /* Hairline chip / tag */
+  .chip {
+    @apply inline-flex items-center gap-2 rounded-full border border-hairline bg-surface/60
+           px-3.5 py-1.5 text-xs font-medium text-ash;
+  }
+}
+
+@layer utilities {
+  /* Thin molten gradient rule used as a section divider */
+  .molten-rule {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(34, 211, 238, 0) 8%,
+      rgba(34, 211, 238, 0.65) 50%,
+      rgba(103, 232, 249, 0.85) 50.5%,
+      rgba(34, 211, 238, 0.65) 51%,
+      rgba(34, 211, 238, 0) 92%,
+      transparent 100%
+    );
+  }
+
+  /* Warm text gradient for accented words in headings */
+  .text-molten {
+    background: linear-gradient(96deg, #7DD3FC 0%, #22D3EE 45%, #67E8F9 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Film-grain / noise overlay - tactile, expensive feel over the dark */
+  .grain::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.035;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+@layer components {
+  /* Typography for the legal pages (/privacy, /terms) */
+  .prose-legal h2 {
+    @apply mt-12 mb-3 text-xl font-semibold text-cream;
+  }
+  .prose-legal h2:first-child { @apply mt-0; }
+  .prose-legal h3 {
+    @apply mt-7 mb-2 text-base font-semibold text-cream/90;
+  }
+  .prose-legal p {
+    @apply mb-4 text-[0.98rem] leading-relaxed text-ash;
+  }
+  .prose-legal ul {
+    @apply mb-4 space-y-2 pl-1;
+  }
+  .prose-legal li {
+    @apply relative pl-5 text-[0.98rem] leading-relaxed text-ash;
+  }
+  .prose-legal li::before {
+    content: '';
+    @apply absolute left-0 top-2.5 h-1.5 w-1.5 rounded-full bg-accent/70;
+  }
+  .prose-legal a {
+    @apply text-accent-light underline decoration-accent/40 underline-offset-2 hover:decoration-accent;
+  }
+  .prose-legal strong { @apply text-cream; }
+}
+
+
+@layer utilities {
+  /* Soft warm ambient wash at the top of the page - lifts the whole layout */
+  .ambient-glow::after {
+    content: '';
+    position: fixed;
+    inset: 0 0 auto 0;
+    height: 60vh;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(60% 55% at 50% -8%, rgba(34,211,238,0.16), transparent 70%),
+      radial-gradient(40% 40% at 85% 0%, rgba(103,232,249,0.08), transparent 70%);
+  }
+
+  /* Top scroll-progress bar (molten accent) */
+  .scroll-progress {
+    transform-origin: 0% 50%;
+    background: linear-gradient(90deg, #38BDF8 0%, #22D3EE 45%, #67E8F9 100%);
+    box-shadow: 0 0 12px rgba(34,211,238,0.55);
+  }
+
+  /* Animated molten sheen for accent text/edges */
+  .molten-sheen {
+    background: linear-gradient(90deg, #7DD3FC, #22D3EE, #67E8F9, #22D3EE, #7DD3FC);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shimmer 6s linear infinite;
+  }
+}

@@ -40,23 +40,20 @@ export default function Contact() {
       if (first) document.getElementById(first)?.focus()
       return
     }
-    setStatus('submitting')
+setStatus('submitting')
 
-    // ────────────────────────────────────────────────────────────────
-    // BACKEND HOOK - drop in your Formspree (or similar) endpoint here.
-    // 1. Create a form at https://formspree.io and copy your endpoint.
-    // 2. Replace the mock below with the fetch call that is commented out.
-    //
-    // const res = await fetch('https://formspree.io/f/XXXXXXXX', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-    //   body: JSON.stringify(form),
-    // })
-    // if (!res.ok) { setStatus('idle'); setErrors({ form: 'Something went wrong. Try again.' }); return }
-    // ────────────────────────────────────────────────────────────────
-
-    await new Promise((r) => setTimeout(r, 900)) // mock latency; remove when live
-    setStatus('success')
+    try {
+      const res = await fetch('https://formspree.io/f/xzdnbrpq', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(form),
+      })
+      if (!res.ok) throw new Error('Request failed')
+      setStatus('success')
+    } catch (err) {
+      setStatus('idle')
+      setErrors({ form: 'Something went wrong. Please try again in a moment.' })
+    }
   }
 
   const fieldClass = (field) =>
